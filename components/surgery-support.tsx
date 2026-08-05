@@ -46,6 +46,10 @@ export function SurgerySupport() {
               ))}
             </div>
           </div>
+
+          <aside className="border border-border bg-card px-6 py-5">
+            <p className="text-sm text-foreground">🔎 Surgery Research: Where to start</p>
+          </aside>
         </div>
       </div>
     </section>

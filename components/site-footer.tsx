@@ -15,21 +15,9 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div className="text-[11px] font-mono text-muted-foreground space-y-1 md:text-right">
+          <div className="text-[11px] font-mono text-muted-foreground md:text-right">
             <p>Last updated: 4th August 2026</p>
-            <p>
-              Built from real community responses.{' '}
-              <span className="text-foreground">Not medical advice.</span>
-            </p>
           </div>
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-border">
-          <p className="text-[11px] font-mono text-muted-foreground leading-relaxed max-w-2xl">
-            The information in this guide is intended for educational purposes only and should not be taken
-            as medical advice. Always consult a qualified healthcare professional for medical guidance.
-            Endometriosis is a serious medical condition requiring proper clinical care.
-          </p>
         </div>
       </div>
     </footer>
