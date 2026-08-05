@@ -16,3 +16,4 @@ node_modules
 # Next.js generated
 next-env.d.ts
 pnpm-workspace.yaml
+tsconfig.tsbuildinfo

@@ -1,6 +1,13 @@
 // Single source of truth for site content + navigation.
 // Every tip is a short, scannable title with the longer explanation tucked
 // into `detail`, so pages stay clickable instead of wall-of-text.
+//
+// Two sources feed each list: the seed content below, and suggestions Lucy has
+// approved on /review, which land in data/published.json. `withPublished()`
+// stitches them together.
+
+import publishedData from '@/data/published.json'
+import type { PublishedEntry } from './sections'
 
 export type Effort = 'Low' | 'Medium' | 'High'
 export type Cost = 'Low' | 'Medium' | 'High'
@@ -19,6 +26,27 @@ export interface NavItem {
 }
 
 export const LAST_UPDATED = '4th August 2026'
+
+const PUBLISHED = publishedData as PublishedEntry[]
+
+/** Seed items first, then anything Lucy has approved for that section. */
+function withPublished<T extends Tip>(
+  section: string,
+  seed: T[],
+  shape: (entry: PublishedEntry) => T,
+): T[] {
+  const approved = PUBLISHED.filter((entry) => entry.section === section).map(shape)
+  return [...seed, ...approved]
+}
+
+function baseTip(entry: PublishedEntry): Tip {
+  return {
+    title: entry.title,
+    ...(entry.detail ? { detail: entry.detail } : {}),
+    ...(entry.href ? { href: entry.href } : {}),
+    ...(entry.linkLabel ? { linkLabel: entry.linkLabel } : {}),
+  }
+}
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Start here', href: '/start-here' },
@@ -98,7 +126,7 @@ export interface FreeTip extends Tip {
   effort: Effort
 }
 
-export const FREE_TIPS: FreeTip[] = [
+const FREE_SEED: FreeTip[] = [
   {
     title: 'Check in (text or call)',
     effort: 'Low',
@@ -162,7 +190,7 @@ export interface SpendTip extends Tip {
   category: string
 }
 
-export const SPEND_TIPS: SpendTip[] = [
+const SPEND_SEED: SpendTip[] = [
   {
     title: 'Anti-inflammatory foods',
     category: 'Food',
@@ -260,7 +288,7 @@ export const SPEND_TIPS: SpendTip[] = [
 // SURGERY
 // ---------------------------------------------------------------------------
 
-export const SURGERY_BEFORE: Tip[] = [
+const SURGERY_BEFORE_SEED: Tip[] = [
   {
     title: 'Research what the surgery involves',
   },
@@ -280,7 +308,7 @@ export const SURGERY_BEFORE: Tip[] = [
   },
 ]
 
-export const SURGERY_AFTER: Tip[] = [
+const SURGERY_AFTER_SEED: Tip[] = [
   {
     title: 'Offer to look after their pets, kids, or home',
     detail: 'During the surgery itself and the hospital stay.',
@@ -291,7 +319,7 @@ export const SURGERY_AFTER: Tip[] = [
 // ENDO AT WORK
 // ---------------------------------------------------------------------------
 
-export const WORK_TIPS: Tip[] = [
+const WORK_SEED: Tip[] = [
   {
     title: 'Know the impact',
     detail:
@@ -363,7 +391,7 @@ export const WORK_LONG_BLOCKS: LongBlock[] = [
 // GENERAL ADVICE
 // ---------------------------------------------------------------------------
 
-export const ADVICE_TIPS: Tip[] = [
+const ADVICE_SEED: Tip[] = [
   {
     title: 'Listen, and validate the pain',
     detail:
@@ -391,7 +419,7 @@ export interface ResourceGroup {
   items: Tip[]
 }
 
-export const RESOURCE_GROUPS: ResourceGroup[] = [
+const RESOURCE_SEED: ResourceGroup[] = [
   {
     emoji: '📖',
     label: 'To read',
@@ -431,3 +459,35 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     items: [],
   },
 ]
+
+// ---------------------------------------------------------------------------
+// Seed content + approved suggestions
+// ---------------------------------------------------------------------------
+
+export const FREE_TIPS: FreeTip[] = withPublished('free-support', FREE_SEED, (entry) => ({
+  ...baseTip(entry),
+  effort: (entry.effort as Effort) || 'Low',
+}))
+
+export const SPEND_TIPS: SpendTip[] = withPublished('spend-money', SPEND_SEED, (entry) => ({
+  ...baseTip(entry),
+  cost: (entry.cost as Cost) || 'Low',
+  category: entry.category || 'Other',
+}))
+
+export const SURGERY_BEFORE: Tip[] = withPublished('surgery-before', SURGERY_BEFORE_SEED, baseTip)
+export const SURGERY_AFTER: Tip[] = withPublished('surgery-after', SURGERY_AFTER_SEED, baseTip)
+export const WORK_TIPS: Tip[] = withPublished('at-work', WORK_SEED, baseTip)
+export const ADVICE_TIPS: Tip[] = withPublished('advice', ADVICE_SEED, baseTip)
+
+const RESOURCE_SECTION_KEYS: Record<string, string> = {
+  'To read': 'resources-read',
+  'To watch': 'resources-watch',
+  'To listen': 'resources-listen',
+  'To follow': 'resources-follow',
+}
+
+export const RESOURCE_GROUPS: ResourceGroup[] = RESOURCE_SEED.map((group) => ({
+  ...group,
+  items: withPublished(RESOURCE_SECTION_KEYS[group.label], group.items, baseTip),
+}))
