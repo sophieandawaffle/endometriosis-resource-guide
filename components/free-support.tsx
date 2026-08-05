@@ -1,7 +1,6 @@
 import { SectionHeader } from './section-header'
 
 // Data from Notion export: FREE SUPPORT CSV
-// Sorted by effort: Low first, then Medium, then High
 const FREE_ITEMS = [
   {
     text: 'Check in (text or call)',
@@ -55,11 +54,7 @@ const FREE_ITEMS = [
   },
 ]
 
-const effortColors: Record<string, string> = {
-  Low: 'text-green-700 bg-green-50 border-green-200',
-  Medium: 'text-yellow-700 bg-yellow-50 border-yellow-200',
-  High: 'text-red-700 bg-red-50 border-red-200',
-}
+const EFFORT_GROUPS = ['Low', 'Medium', 'High'] as const
 
 export function FreeSupport() {
   return (
@@ -71,27 +66,35 @@ export function FreeSupport() {
           description="These are some acts of service you can do for zero or low cost that can mean a lot to people dealing with endometriosis. Most are low to medium effort."
         />
 
-        <div className="mt-8 space-y-3">
-          {FREE_ITEMS.map((item, i) => (
-            <div key={i} className="flex gap-4 items-start border border-border bg-card p-4">
-              <span className="font-mono text-[10px] text-muted-foreground shrink-0 w-5 text-right pt-1">
-                {i + 1}.
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-start gap-3">
-                  <p className="text-sm text-foreground leading-relaxed flex-1">{item.text}</p>
-                  <span className={`text-[10px] font-mono uppercase tracking-wider border px-2 py-0.5 shrink-0 ${effortColors[item.effort]}`}>
-                    {item.effort}
-                  </span>
+        <div className="mt-8 space-y-10">
+          {EFFORT_GROUPS.map((effort) => {
+            const items = FREE_ITEMS.filter((item) => item.effort === effort)
+
+            return (
+              <div key={effort}>
+                <h3 className="mb-4 border-b border-border pb-3 font-display text-2xl uppercase leading-none text-foreground">
+                  {effort} effort
+                </h3>
+                <div className="space-y-3">
+                  {items.map((item, i) => (
+                    <div key={item.text} className="flex gap-4 items-start border border-border bg-card p-4">
+                      <span className="font-mono text-[10px] text-muted-foreground shrink-0 w-5 text-right pt-1">
+                        {i + 1}.
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
+                        {item.whyItHelps && (
+                          <p className="mt-1.5 text-[11px] font-mono text-muted-foreground leading-relaxed">
+                            {item.whyItHelps}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                {item.whyItHelps && (
-                  <p className="mt-1.5 text-[11px] font-mono text-muted-foreground leading-relaxed">
-                    {item.whyItHelps}
-                  </p>
-                )}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

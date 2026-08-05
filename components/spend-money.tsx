@@ -107,12 +107,12 @@ const SPEND_ITEMS = [
   },
 ]
 
-const costColors: Record<string, string> = {
-  Low: 'text-green-700 bg-green-50 border-green-200',
-  Medium: 'text-yellow-700 bg-yellow-50 border-yellow-200',
-  High: 'text-red-700 bg-red-50 border-red-200',
-  'High, Medium': 'text-orange-700 bg-orange-50 border-orange-200',
-}
+const COST_GROUPS = [
+  { cost: 'Low', label: 'Low cost' },
+  { cost: 'Medium', label: 'Medium cost' },
+  { cost: 'High', label: 'High cost' },
+  { cost: 'High, Medium', label: 'Medium / High cost' },
+] as const
 
 export function SpendMoney() {
   return (
@@ -127,38 +127,44 @@ export function SpendMoney() {
           Note: always check with people before buying them something - they may not want or need it, or already have it - and everything won&apos;t work for everyone.
         </p>
 
-        <div className="space-y-3">
-          {SPEND_ITEMS.map((item, i) => (
-            <div key={i} className="flex gap-4 items-start border border-border bg-card p-4">
-              <span className="font-mono text-[10px] text-muted-foreground shrink-0 w-5 text-right pt-1">
-                {i + 1}.
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-start gap-2">
-                  <p className="text-sm text-foreground leading-relaxed flex-1">{item.item}</p>
-                  <div className="flex gap-2 shrink-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider border px-2 py-0.5 text-muted-foreground border-border">
-                      {item.category}
-                    </span>
-                    <span className={`text-[10px] font-mono uppercase tracking-wider border px-2 py-0.5 ${costColors[item.cost] ?? costColors['Medium']}`}>
-                      {item.cost}
-                    </span>
-                  </div>
+        <div className="space-y-10">
+          {COST_GROUPS.map((group) => {
+            const items = SPEND_ITEMS.filter((item) => item.cost === group.cost)
+
+            return (
+              <div key={group.cost}>
+                <h3 className="mb-4 border-b border-border pb-3 font-display text-2xl uppercase leading-none text-foreground">
+                  {group.label}
+                </h3>
+                <div className="space-y-3">
+                  {items.map((item, i) => (
+                    <div key={item.item} className="flex gap-4 items-start border border-border bg-card p-4">
+                      <span className="font-mono text-[10px] text-muted-foreground shrink-0 w-5 text-right pt-1">
+                        {i + 1}.
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-foreground leading-relaxed">{item.item}</p>
+                        <p className="mt-1 text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
+                          {item.category}
+                        </p>
+                        {item.info && (
+                          <p className="mt-1.5 text-[11px] font-mono text-muted-foreground leading-relaxed">
+                            {item.href ? (
+                              <>
+                                {item.info.split(item.href)[0]}
+                                <a href={item.href} target="_blank" rel="noopener noreferrer" className="underline decoration-[var(--endo-red)] underline-offset-2 hover:text-[var(--endo-red)]">{item.href}</a>
+                                {item.info.split(item.href)[1]}
+                              </>
+                            ) : item.info}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                {item.info && (
-                  <p className="mt-1.5 text-[11px] font-mono text-muted-foreground leading-relaxed">
-                    {item.href ? (
-                      <>
-                        {item.info.split(item.href)[0]}
-                        <a href={item.href} target="_blank" rel="noopener noreferrer" className="underline decoration-[var(--endo-red)] underline-offset-2 hover:text-[var(--endo-red)]">{item.href}</a>
-                        {item.info.split(item.href)[1]}
-                      </>
-                    ) : item.info}
-                  </p>
-                )}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
