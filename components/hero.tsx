@@ -39,23 +39,11 @@ export function Hero() {
 
         {/* Full title */}
         <h1 className="text-xl md:text-2xl font-sans font-semibold leading-snug text-foreground max-w-2xl text-pretty mb-4">
-          How to ACTUALLY help people with endometriosis
-          <span className="font-normal text-muted-foreground"> (a guide)</span>
+          How to ACTUALLY help people with endometriosis (a guide)
         </h1>
-
-        {/* Intro blurb */}
-        <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-          I asked my TikTok community one question: how do you ACTUALLY help someone with endometriosis?
-          Hundreds of comments came in. This is what they said, sorted so you can filter by cost and effort.
-        </p>
 
         {/* Divider line */}
         <div className="mt-8 md:mt-12 h-px bg-border" aria-hidden="true" />
-
-        {/* Attribution */}
-        <p className="mt-4 text-[11px] font-mono text-muted-foreground tracking-wide">
-          A GUIDE WRITTEN BY A WOMAN WITH ENDO — WITH SUGGESTIONS FROM REAL PEOPLE WITH ENDOMETRIOSIS
-        </p>
       </div>
     </header>
   )

@@ -1,117 +1,164 @@
 import { SectionHeader } from './section-header'
-import { ContentList } from './content-list'
-import { Callout } from './callout'
 
-const LOW_COST_ITEMS = [
+// Data from Notion export: THINGS TO SPEND MONEY ON CSV
+const SPEND_ITEMS = [
   {
-    text: 'A quality heating pad or electric hot water bottle',
-    note: 'Heat is one of the most commonly cited forms of pain relief. A wheat bag, USB electric heat pad, or microwaveable pack.',
+    item: 'Anti-inflammatory foods',
+    category: 'Food',
+    cost: 'Low',
+    info: 'Everyone is different, but some typical anti-inflammatory foods include fish, leafy greens, berries, flaxseeds, turmeric, ginger, olive oil, nuts',
   },
   {
-    text: 'A comfortable weighted blanket',
-    note: 'Many people with chronic pain find these soothing during flares.',
+    item: 'Hot water bottle',
+    category: 'Pain relief',
+    cost: 'Low',
+    info: '',
   },
   {
-    text: 'Easy comfort foods they love — soups, snacks, foods that require no prep',
-    note: 'Cooking when in pain is hard. Ready-made meals or a grocery delivery are a real gift.',
+    item: 'Electrolytes',
+    category: 'Food',
+    cost: 'Low',
+    info: '',
   },
   {
-    text: 'Loose, comfortable clothing — oversized hoodies, soft joggers',
-    note: 'Tight waistbands can be excruciating during flares. Softness matters.',
+    item: 'Surgery care package (donation-based via EndoBuddies)',
+    category: 'Items',
+    cost: 'Low',
+    info: 'Order a pre-made care package via Endo Buddies (UK) here: https://endobuddies.com/product/surgery-care-package/ (note - order well ahead of time).',
+    href: 'https://endobuddies.com/product/surgery-care-package/',
   },
   {
-    text: 'Peppermint tea, ginger tea, or herbal teas they like',
-    note: 'Some people find these helpful for bloating and nausea. Always check preferences first.',
+    item: 'Post-surgery recovery basket (DIY option)',
+    category: 'Items',
+    cost: 'Medium',
+    info: 'Peppermint tea, comfy pyjamas, compression socks, sleep mask, ear plugs, face mask, hot water bottle, electrolytes, silk pillowcase or sheets, snacks',
   },
   {
-    text: 'A cosy blanket or throw',
-    note: 'Small, thoughtful, practical.',
+    item: 'Wearable heating pad',
+    category: 'Pain relief',
+    cost: 'Medium',
+    info: '',
   },
   {
-    text: 'A journal or notebook if they enjoy writing',
-    note: 'Many people find journalling helpful for processing a chronic illness experience.',
+    item: 'Doordash/Deliveroo/Uber Eats vouchers',
+    category: 'Food',
+    cost: 'Medium',
+    info: 'Helpful during a flare when you physically can\'t cook.',
+  },
+  {
+    item: 'TENS machine',
+    category: 'Pain relief',
+    cost: 'Medium',
+    info: '',
+  },
+  {
+    item: 'Donate to surgery GoFundMe\'s',
+    category: 'Donations',
+    cost: 'Medium',
+    info: 'Especially for people without access to the NHS',
+  },
+  {
+    item: 'Subscription to symptom or period tracker apps',
+    category: 'Healthcare',
+    cost: 'Medium',
+    info: 'Tracking symptoms is often one of the ways we\'re able to get doctors to take us seriously.',
+  },
+  {
+    item: 'Pelvic floor / hip mobility physiotherapy',
+    category: 'Healthcare',
+    cost: 'High',
+    info: 'People with endo are more likely to have a hyperactive pelvic floor and tightness in the hips, which can contribute to pain and symptoms. Physio can help relieve them!',
+  },
+  {
+    item: 'High-cost supplements',
+    category: 'Healthcare',
+    cost: 'High',
+    info: 'Cover the cost of their usual supplements/vitamins for a month.',
+  },
+  {
+    item: 'Hot tub',
+    category: 'Pain relief',
+    cost: 'High',
+    info: 'No need to wait for a hot bath to run!',
+  },
+  {
+    item: 'Therapy',
+    category: 'Healthcare',
+    cost: 'High',
+    info: 'Mental health care is so important and often overlooked. An endo/chronic illness specialist therapist can help.',
+  },
+  {
+    item: 'Sound bath meditation',
+    category: 'Relaxation',
+    cost: 'High, Medium',
+    info: 'Extremely calming, can help reduce stress which contributes to flare-ups',
+  },
+  {
+    item: 'Reiki healing session',
+    category: 'Relaxation',
+    cost: 'High',
+    info: 'Deep relaxation and stress-relief potential',
+  },
+  {
+    item: 'Organic underwear',
+    category: 'Items',
+    cost: 'High',
+    info: 'Reduce exposure of toxins to the pelvic area and increase comfort',
   },
 ]
 
-const MID_COST_ITEMS = [
-  {
-    text: 'Pay for a cleaner for a day while they recover from surgery or a bad flare',
-    note: 'This is one of the most frequently mentioned and appreciated things.',
-  },
-  {
-    text: 'A food delivery service subscription (Deliveroo Plus, Just Eat etc.) for when cooking is impossible',
-  },
-  {
-    text: 'A high-quality TENS machine',
-    note: 'Transcutaneous electrical nerve stimulation — many people with chronic pain swear by them.',
-  },
-  {
-    text: 'Subscription to a mindfulness or meditation app (Calm, Headspace)',
-    note: 'Chronic illness takes a serious mental health toll.',
-  },
-  {
-    text: 'Contribution towards private physiotherapy or pelvic floor therapy',
-    note: 'Pelvic physiotherapy is one of the most highly recommended treatments — but not always available on the NHS.',
-  },
-  {
-    text: 'A high-quality thermos or water bottle',
-    note: 'Staying hydrated is important for managing symptoms; having a nice vessel makes it easier.',
-  },
-]
-
-const HIGHER_COST_ITEMS = [
-  {
-    text: 'Contribution towards private consultations with an endo specialist',
-    note: 'NHS waiting lists can be very long. A private appointment can be life-changing.',
-  },
-  {
-    text: 'A spa day or massages — check with them first and ensure it\'s appropriate for their symptoms',
-  },
-  {
-    text: 'Contribution towards a nutrient-dense meal delivery service (e.g. Mindful Chef)',
-    note: 'Diet doesn\'t cure endo but eating well during recovery matters.',
-  },
-]
+const costColors: Record<string, string> = {
+  Low: 'text-green-700 bg-green-50 border-green-200',
+  Medium: 'text-yellow-700 bg-yellow-50 border-yellow-200',
+  High: 'text-red-700 bg-red-50 border-red-200',
+  'High, Medium': 'text-orange-700 bg-orange-50 border-orange-200',
+}
 
 export function SpendMoney() {
   return (
     <section id="spend-money" className="scroll-mt-16 py-12 md:py-16 border-b border-border">
       <div className="max-w-5xl mx-auto px-6 md:px-10">
         <SectionHeader
-          label="When you want to spend money"
-          title="Things to Spend Money On"
+          label="Things to Spend Money On"
+          title="THINGS TO SPEND MONEY ON"
         />
 
-        <Callout variant="warning">
-          <p className="font-semibold text-foreground mb-2">Check first</p>
-          <p>
-            Always check with people before buying them something — they may not want or need it,
-            or already have it — and everything won&apos;t work for everyone. Asking
-            &quot;would this be helpful?&quot; is never a bad idea.
-          </p>
-        </Callout>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-8 italic">
+          Note: always check with people before buying them something - they may not want or need it, or already have it - and everything won&apos;t work for everyone.
+        </p>
 
-        <div className="mt-8 space-y-10">
-          <div>
-            <h3 className="text-[11px] font-mono tracking-[0.25em] uppercase text-muted-foreground mb-4 pb-3 border-b border-border">
-              Low cost (under &pound;30)
-            </h3>
-            <ContentList items={LOW_COST_ITEMS} />
-          </div>
-
-          <div>
-            <h3 className="text-[11px] font-mono tracking-[0.25em] uppercase text-muted-foreground mb-4 pb-3 border-b border-border">
-              Mid range (&pound;30–&pound;150)
-            </h3>
-            <ContentList items={MID_COST_ITEMS} />
-          </div>
-
-          <div>
-            <h3 className="text-[11px] font-mono tracking-[0.25em] uppercase text-muted-foreground mb-4 pb-3 border-b border-border">
-              Higher investment (&pound;150+)
-            </h3>
-            <ContentList items={HIGHER_COST_ITEMS} />
-          </div>
+        <div className="space-y-3">
+          {SPEND_ITEMS.map((item, i) => (
+            <div key={i} className="flex gap-4 items-start border border-border bg-card p-4">
+              <span className="font-mono text-[10px] text-muted-foreground shrink-0 w-5 text-right pt-1">
+                {i + 1}.
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-start gap-2">
+                  <p className="text-sm text-foreground leading-relaxed flex-1">{item.item}</p>
+                  <div className="flex gap-2 shrink-0">
+                    <span className="text-[10px] font-mono uppercase tracking-wider border px-2 py-0.5 text-muted-foreground border-border">
+                      {item.category}
+                    </span>
+                    <span className={`text-[10px] font-mono uppercase tracking-wider border px-2 py-0.5 ${costColors[item.cost] ?? costColors['Medium']}`}>
+                      {item.cost}
+                    </span>
+                  </div>
+                </div>
+                {item.info && (
+                  <p className="mt-1.5 text-[11px] font-mono text-muted-foreground leading-relaxed">
+                    {item.href ? (
+                      <>
+                        {item.info.split(item.href)[0]}
+                        <a href={item.href} target="_blank" rel="noopener noreferrer" className="underline decoration-[var(--endo-red)] underline-offset-2 hover:text-[var(--endo-red)]">{item.href}</a>
+                        {item.info.split(item.href)[1]}
+                      </>
+                    ) : item.info}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
