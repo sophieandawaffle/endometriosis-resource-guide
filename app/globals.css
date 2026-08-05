@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Inter', 'Inter Fallback';
+  --font-display: 'Anton', 'Anton Fallback';
+  --font-mono: 'IBM Plex Mono', 'IBM Plex Mono Fallback';
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+  --color-endo-red: var(--endo-red);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  color-scheme: light;
+  /* ENDO brand palette — 5 colours total */
+  --endo-red: #E8251A;
+
+  --background: #F2F0EC;      /* warm off-white */
+  --foreground: #1A1A1A;      /* near-black */
+  --card: #E8E5DF;            /* slightly darker off-white */
+  --card-foreground: #1A1A1A;
+  --primary: #E8251A;         /* endo red */
+  --primary-foreground: #F2F0EC;
+  --muted: #D6D3CC;
+  --muted-foreground: #6B6560;
+  --accent: #E8251A;
+  --accent-foreground: #F2F0EC;
+  --border: #C8C4BC;
+  --input: #C8C4BC;
+  --ring: #E8251A;
+  --radius: 0rem;             /* zero radius — editorial/flat */
+
+  --sidebar: #E8E5DF;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #E8251A;
+  --sidebar-primary-foreground: #F2F0EC;
+  --sidebar-accent: #D6D3CC;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #C8C4BC;
+  --sidebar-ring: #E8251A;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply bg-background;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
